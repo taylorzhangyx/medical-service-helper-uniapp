@@ -1,14 +1,17 @@
 <template>
     <view class="nav">
-        <view :style="'height'+status+'rpx;' + containerStyle"></view>
+        <view :style="'height'+statusHeight+'rpx;' + containerStyle"></view>
         <view class="navbar" :style="'height:'+navHeight + 'rpx;' + containerStyle"></view>
         <view>this is taylor's navbar</view>
     </view>
 </template>
 
 <script setup>
-    import { onBeforeMount, ref, defineProps } from 'vue'
-    defineProps({
+    import {
+        onBeforeMount,
+        ref
+    } from 'vue'
+    const props = defineProps({
         background: {
             type: String,
             default: 'rgba(255, 255, 255, 1)'
@@ -21,14 +24,14 @@
             type: String,
             default: '32'
         },
-        iconWidth:{
+        iconWidth: {
             type: String,
             default: '116'
         },
-        iconHeight:{
+        iconHeight: {
             type: String,
             default: '38'
-        },
+        }
     })
     onBeforeMount(() => {
         console.log('onBeforeMount')
@@ -48,7 +51,10 @@
 
     // 计算状态栏高度
     const setNavSize = () => {
-        const {system, statusBarHeight} = uni.getSystemInfoSync();
+        const {
+            system,
+            statusBarHeight
+        } = uni.getSystemInfoSync();
         // console.log(systemInfo);
         statusHeight.value = statusBarHeight;
         const isios = system.indexOf('iOS') > -1;
@@ -70,7 +76,6 @@
     .nav {
         position: fixed;
         width: 100%;
-        top: 0;
         left: 0;
         z-index: 2;
         background: blueviolet;

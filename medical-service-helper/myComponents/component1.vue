@@ -1,6 +1,6 @@
 <template>
     <view>
-        component
+        component1 taylor
     </view>
 </template>
 

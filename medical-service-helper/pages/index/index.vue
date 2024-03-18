@@ -1,7 +1,9 @@
 <template>
-    <view class="nav">
-       <navbar name="taylor's navbar" ></navbar>
+    <view>
+        <navbar name="taylor's navbar">nav bar</navbar>
     </view>
+    <!-- <view>show index page</view> -->
+    <my-component></my-component>
 </template>
 
 <script setup>
