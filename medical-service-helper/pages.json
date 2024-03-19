@@ -20,6 +20,13 @@
                 "navigationBarTitleText": "user",
                 "navigationBarBackgroundColor": "#FFFFFF"
             }
+        },
+        {
+            "path": "pages/search/index",
+            "style": {
+                "navigationBarTitleText": "",
+                "navigationStyle": "custom"
+            }
         }
     ],
     "tabBar": {

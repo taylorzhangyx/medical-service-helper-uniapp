@@ -1,10 +1,22 @@
-<template>
+view<template>
     <view class="nav">
         <view class="statusbar"
               :style="'height:' + statusHeight + 'rpx;' + containerStyle">statusbar</view>
         <view class="navbar"
-              :style="'height:' + navHeight + 'rpx;' + containerStyle">navbar</view>
-        <view>this is taylor's navbar</view>
+              :style="'height:' + navHeight + 'rpx;' + containerStyle">
+            <view class="back-icon"
+                  @click="backOrHome">
+                <image v-if="pages > 1"
+                       src="./../../static/resource/navbar/ic_back.png" />
+                <image v-else
+                       src="./../../static/resource/navbar/ic_home.png" />
+            </view>
+            <view class="nav-title"
+                  v-if="titleText">
+                  <view :style="'height:'+navHeight+'rpx;'"></view>
+                </view>
+        </view>
+        <!-- <view>this is taylor's navbar</view> -->
     </view>
 </template>
 
@@ -33,6 +45,10 @@ const props = defineProps({
     iconHeight: {
         type: String,
         default: '38'
+    },
+    titleText: {
+        type: String,
+        default: '标题'
     }
 })
 onBeforeMount(() => {
@@ -50,7 +66,8 @@ const containerStyle = ref('')
 const textStyle = ref('')
 // 图标样式
 const iconStyle = ref('')
-
+// 页面栈数量
+const pages = ref(getCurrentPages().length)
 // 计算状态栏高度
 const setNavSize = () => {
     const {
@@ -72,6 +89,16 @@ const setStyle = () => {
     textStyle.value = `color: ${props.color};font-size: ${props.fontSize}rpx;`
     iconStyle.value = `width: ${props.iconWidth}rpx;height: ${props.iconHeight}rpx;`
 }
+// 返回
+const backOrHome = () => {
+    if (pages.value > 1) {
+        uni.navigateBack()
+    } else {
+        uni.switchTab({
+            url: '/pages/index/index'
+        })
+    }
+}
 </script>
 
 <style>
@@ -82,5 +109,18 @@ const setStyle = () => {
     left: 0;
     z-index: 2;
     background: #27c9de;
+}
+
+.back-icon {
+    display: flex;
+    align-items: center;
+    width: 64rpx;
+    height: 100%;
+    margin-left: 20rpx
+}
+
+.back-icon image {
+    width: 64rpx;
+    height: 64rpx;
 }
 </style>
