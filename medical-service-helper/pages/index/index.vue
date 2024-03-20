@@ -20,8 +20,6 @@
             </view>
         </view>
     </view>
-    <!-- <view>show index page</view> -->
-    <!-- <my-component></my-component> -->
 </template>
 
 <script setup>
