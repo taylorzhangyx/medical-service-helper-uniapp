@@ -1,5 +1,5 @@
-@import './common/resource/style/weui.css';
-@import './common/resource/style/vpower.css';
+@import './common/style/weui.css';
+@import './common/style/vpower.css';
 
 /** weui override **/
 .weui-cells__title {
