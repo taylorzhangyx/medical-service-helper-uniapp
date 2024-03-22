@@ -27,6 +27,22 @@
                 "navigationBarTitleText": "",
                 "navigationStyle": "custom"
             }
+        },
+        {
+            "path" : "pages/hospital/index",
+            "style" : 
+            {
+                "navigationBarTitleText" : "",
+                "enablePullDownRefresh" : false
+            }
+        },
+        {
+            "path" : "pages/service/index",
+            "style" : 
+            {
+                "navigationBarTitleText" : "",
+                "enablePullDownRefresh" : false
+            }
         }
     ],
     "tabBar": {
