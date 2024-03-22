@@ -3,13 +3,13 @@ import Component from "./myComponents/component1.vue";
 
 
 Date.prototype.VP_FORMAT = function (format) {
-  console.log(
-    "==========>this.getDate() " + this.getTime() / (24 * 60 * 60 * 1000)
-  );
-  console.log(
-    "==========>new Date().getDate() " +
-      new Date().getTime() / (24 * 60 * 60 * 1000)
-  );
+  // console.log(
+  //   "==========>this.getDate() " + this.getTime() / (24 * 60 * 60 * 1000)
+  // );
+  // console.log(
+  //   "==========>new Date().getDate() " +
+  //     new Date().getTime() / (24 * 60 * 60 * 1000)
+  // );
   var ds =
     parseInt(this.getTime() / (24 * 60 * 60 * 1000)) -
     parseInt(new Date().getTime() / (24 * 60 * 60 * 1000));
