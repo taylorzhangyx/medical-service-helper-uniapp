@@ -72,14 +72,25 @@
                                 </picker>
                             </view>
                         </view>
+                    </view>
+                    <view class="weui-cell weui-cell_input">
+                        <view class="weui-cell__hd">
+                            <view class="weui-label">就诊时间</view>
+                        </view>
+
+                        <view class="weui-cell__bd"></view>
+                        <view class="weui-cell__ft weui_cell__ft_in-access">
+                            <view>
+                                <dtPicker @dtPickerChanged="onStartTimeChanged"
+                                          :timestamp="order.starttime"
+                                          placeholder="请选择就诊时间"></dtPicker>
+                            </view>
+                        </view>
 
                     </view>
                 </view>
             </view>
         </block>
-        <view>
-            <text>Price is {{ order.price }}</text>
-        </view>
     </view>
 </template>
 
@@ -147,6 +158,11 @@ const onHospitalChange = (e) => {
     hospital_index.value = newIndex
     order.price = toRaw(hospitals.value)[newIndex].service_price
     // console.log("price", order.price)
+}
+// 修改日期后的回调
+const onStartTimeChanged = (e) => {
+    console.log('onStartTimeChanged', e)
+    order.starttime = e.detail.value
 }
 </script>
 
