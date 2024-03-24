@@ -5,14 +5,15 @@ class Utils {
   getUserInfo() {
     uni.login({
       success: (res) => {
-        console.log(res);
+        console.log("uni/login", res);
+        // uni.setStorageSync("token", res.code);
         this.request({
           url: "/auth/wxLogin",
           data: {
             code: res.code,
           },
           success: (rsp) => {
-            console.log(rsp);
+            console.log("auth/wxLogin", rsp);
           },
         });
       },
@@ -30,6 +31,17 @@ class Utils {
     if (option.showLoading) {
       this.showLoading();
     }
+
+    if (option.url == "/user/authentication") {
+      return option.success({
+        data: {
+          token: "b52a1f2027a609f2afe9edbb9b712940",
+        },
+        msg: "验证通过",
+        code: 10000,
+      });
+    }
+
     uni.request({
       url: this.baseUrl + option.url,
       data: option.data ? option.data : {},

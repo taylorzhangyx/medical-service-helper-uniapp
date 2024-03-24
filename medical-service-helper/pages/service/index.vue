@@ -398,7 +398,7 @@
     })
     const countdown = reactive({
         validText: '获取验证码',
-        validTime: 60
+        time: 60
     })
     // 是否同意协议
     const is_xieyi = ref(false)
@@ -482,11 +482,76 @@
     const onXieyiChange = () => {
         is_xieyi.value = !is_xieyi.value
     }
+
+    // 注册与验证码倒计时
+    let flag = false
     const countdownChange = () => {
         console.log('countdownChange')
-        if (validMobile.phone) {
-
+        if (!validMobile.phone) {
+            showToast("请输入手机号码")
         }
+        if (flag) {
+            showToast("请勿频繁操作")
+            return
+        }
+        const time = setInterval(() => {
+            if (countdown.time <= 0) {
+                countdown.validText = '获取验证码'
+                countdown.time = 60
+                clearInterval(time)
+                flag = false
+            } else {
+                countdown.time--
+                countdown.validText = `剩余${countdown.time}s`
+            }
+        }, 1000)
+        flag = true
+        // 发送验证码
+        app.globalData.utils.request({
+            url: '/get/code',
+            method: 'POST',
+            data: {
+                tel: validMobile.phone
+            },
+            success: (res) => {
+                console.log('get code success', res)
+                showToast('验证码已发送, 请注意查收')
+            },
+            fail: (res) => {
+                console.log('get code fail', res)
+                showToast(res.data.msg)
+            },
+        })
+    }
+    const cancel = () => {
+        console.log('cancel')
+        popup.value.close()
+    }
+    const ok = () => {
+        console.log('ok')
+        if (!validMobile.validCode || !validMobile.phone) {
+            return showToast('请输入手机号码或验证码')
+        }
+
+        // 验证短信
+        app.globalData.utils.request({
+            url: '/user/authentication',
+            method: 'POST',
+            data: {
+                tel: validMobile.phone,
+                code: validMobile.validCode
+            },
+            success: (res) => {
+                console.log('authentication success', res)
+                uni.setStorageSync('token', res.data.token)
+                popup.value.close()
+                submit()
+            },
+            fail: (res) => {
+                console.log('authentication fail', res)
+                showToast(res.data.msg)
+            },
+        })
     }
     // 下单函数
     const submit = () => {
@@ -535,6 +600,10 @@
         orderData.client.mobile = clientData.mobile
         orderData.client.sex = clientData.sex
         console.log('submit orderData', orderData)
+        if (!uni.getStorageSync('token')) {
+            popup.value.open('center')
+        }
+        showToast('下单成功')
     }
     const showToast = (msg) => {
         uni.showToast({
@@ -542,12 +611,6 @@
             icon: 'none',
             duration: 1000
         })
-    }
-    const cancel = () => {
-        console.log('cancel')
-    }
-    const ok = () => {
-        console.log('ok')
     }
 </script>
 
