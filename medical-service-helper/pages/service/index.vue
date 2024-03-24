@@ -361,6 +361,8 @@
         mainLoad(options)
     })
 
+    // 弹框控制
+    const popup = ref()
     // 页面服务详情
     const service = ref({})
     // 医院列表
@@ -394,16 +396,17 @@
         age: 0,
         mobile: ''
     })
-    const validMobile = reactive({
-        phone: '',
-        validCode: ''
-    })
     const countdown = reactive({
         validText: '获取验证码',
         validTime: 60
     })
     // 是否同意协议
     const is_xieyi = ref(false)
+    // 验证码
+    const validMobile = reactive({
+        phone: '',
+        validCode: ''
+    })
 
     // 页面加载
     const mainLoad = (options) => {
@@ -481,6 +484,9 @@
     }
     const countdownChange = () => {
         console.log('countdownChange')
+        if (validMobile.phone) {
+
+        }
     }
     // 下单函数
     const submit = () => {
