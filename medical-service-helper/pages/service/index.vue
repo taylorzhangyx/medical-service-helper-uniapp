@@ -77,7 +77,6 @@
                         <view class="weui-cell__hd">
                             <view class="weui-label">就诊时间</view>
                         </view>
-
                         <view class="weui-cell__bd"></view>
                         <view class="weui-cell__ft weui_cell__ft_in-access">
                             <view>
@@ -86,7 +85,18 @@
                                           placeholder="请选择就诊时间"></dtPicker>
                             </view>
                         </view>
-
+                    </view>
+                    <view class="weui-cell weui-cell_input"
+                          @click="onClientChange">
+                        <view class="weui-cell__hd">
+                            <view class="weui-label">就诊人</view>
+                        </view>
+                        <view class="weui-cell__bd"></view>
+                        <view class="weui-cell__ft weui_cell__ft_in-access">
+                            <view>
+                                <input type="text">
+                            </view>
+                        </view>
                     </view>
                 </view>
             </view>
@@ -95,75 +105,79 @@
 </template>
 
 <script setup>
-import { ref, reactive, toRaw } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
-const app = getApp()
-onLoad((options) => {
-    console.log('service onload', options)
-    mainLoad(options)
-})
+    import { ref, reactive, toRaw } from 'vue'
+    import { onLoad } from '@dcloudio/uni-app'
+    const app = getApp()
+    onLoad((options) => {
+        console.log('service onload', options)
+        mainLoad(options)
+    })
 
-// 页面服务详情
-const service = ref({})
-// 医院列表
-const hospitals = ref([])
-// 医院索引
-const hospital_index = ref(0)
-// 订单数据
-const order = reactive({
-    price: '',
-    starttime: '',
-    address: {
-        userName: '',
-        cityName: '',
-        countyName: '',
-        detailInfo: ''
-    }
-})
+    // 页面服务详情
+    const service = ref({})
+    // 医院列表
+    const hospitals = ref([])
+    // 医院索引
+    const hospital_index = ref(0)
+    // 订单数据
+    const order = reactive({
+        price: '',
+        starttime: '',
+        address: {
+            userName: '',
+            cityName: '',
+            countyName: '',
+            detailInfo: ''
+        }
+    })
 
-// 页面加载
-const mainLoad = (options) => {
-    console.log('service mainLoad', options)
-    app.globalData.utils.request({
-        url: '/Service/order',
-        data: {
-            svid: options.svid
-        },
-        success: (res) => {
-            console.log('mainLoad success', res)
-            service.value = res.data.service
-            hospitals.value = res.data.hospitals
-            // 默认选中
-            const hospitalsData = res.data.hospitals
-            if (options.hid > 0) {
-                for (let i = 0; i < hospitalsData.length; i++) {
-                    if (hospitalsData[i].id == options.hid) {
-                        hospital_index.value = i
-                        const matchedHospital = hospitalsData[i]
-                        order.price = matchedHospital.service_price
-                        break
+    // 页面加载
+    const mainLoad = (options) => {
+        console.log('service mainLoad', options)
+        app.globalData.utils.request({
+            url: '/Service/order',
+            data: {
+                svid: options.svid
+            },
+            success: (res) => {
+                console.log('mainLoad success', res)
+                service.value = res.data.service
+                hospitals.value = res.data.hospitals
+                // 默认选中
+                const hospitalsData = res.data.hospitals
+                if (options.hid > 0) {
+                    for (let i = 0; i < hospitalsData.length; i++) {
+                        if (hospitalsData[i].id == options.hid) {
+                            hospital_index.value = i
+                            const matchedHospital = hospitalsData[i]
+                            order.price = matchedHospital.service_price
+                            break
+                        }
                     }
                 }
             }
-        }
-    })
-}
-// 点击事件
-const handleTap = () => {
-    console.log('handleTap')
-}
-const onHospitalChange = (e) => {
-    console.log('onHospitalChange', e)
-    const newIndex = parseInt(e.detail.value)
-    hospital_index.value = newIndex
-    order.price = toRaw(hospitals.value)[newIndex].service_price
-    // console.log("price", order.price)
-}
-// 修改日期后的回调
-const onStartTimeChanged = (e) => {
-    console.log('onStartTimeChanged', e)
-    order.starttime = e.detail.value
-}
+        })
+    }
+    // 点击事件
+    const handleTap = () => {
+        console.log('handleTap')
+    }
+    const onHospitalChange = (e) => {
+        console.log('onHospitalChange', e)
+        const newIndex = parseInt(e.detail.value)
+        hospital_index.value = newIndex
+        order.price = toRaw(hospitals.value)[newIndex].service_price
+        // console.log("price", order.price)
+    }
+    // 修改日期后的回调
+    const onStartTimeChanged = (e) => {
+        console.log('onStartTimeChanged', e)
+        order.starttime = e.detail.value
+    }
+    const onClientChange = () => {
+        console.log('onClientChange')
+        uni.navigateTo({ url: './../clients/index?act=select' })
+    }
 </script>
 
 <style>
