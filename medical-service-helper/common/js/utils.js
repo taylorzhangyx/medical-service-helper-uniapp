@@ -21,7 +21,7 @@ class Utils {
   }
   request(
     option = {
-      showLoading: false,
+      showLoading: true,
     }
   ) {
     // check if url exists
@@ -81,6 +81,13 @@ class Utils {
       fail: () => {
         uni.setStorageSync("isShowLoading", false);
       },
+    });
+  }
+  showToast(msg) {
+    uni.showToast({
+      title: msg,
+      icon: "none",
+      duration: 1000,
     });
   }
 }

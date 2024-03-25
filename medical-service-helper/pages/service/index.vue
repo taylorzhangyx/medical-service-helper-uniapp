@@ -488,10 +488,10 @@
     const countdownChange = () => {
         console.log('countdownChange')
         if (!validMobile.phone) {
-            showToast("请输入手机号码")
+            app.globalData.utils.showToast("请输入手机号码")
         }
         if (flag) {
-            showToast("请勿频繁操作")
+            app.globalData.utils.showToast("请勿频繁操作")
             return
         }
         const time = setInterval(() => {
@@ -515,11 +515,11 @@
             },
             success: (res) => {
                 console.log('get code success', res)
-                showToast('验证码已发送, 请注意查收')
+                app.globalData.utils.showToast('验证码已发送, 请注意查收')
             },
             fail: (res) => {
                 console.log('get code fail', res)
-                showToast(res.data.msg)
+                app.globalData.utils.showToast(res.data.msg)
             },
         })
     }
@@ -530,7 +530,7 @@
     const ok = () => {
         console.log('ok')
         if (!validMobile.validCode || !validMobile.phone) {
-            return showToast('请输入手机号码或验证码')
+            return app.globalData.utils.showToast('请输入手机号码或验证码')
         }
 
         // 验证短信
@@ -549,7 +549,7 @@
             },
             fail: (res) => {
                 console.log('authentication fail', res)
-                showToast(res.data.msg)
+                app.globalData.utils.showToast(res.data.msg)
             },
         })
     }
@@ -557,36 +557,43 @@
     const submit = () => {
         console.log('submit')
         if (!is_xieyi.value) {
-            return showToast('请先同意协议')
+            return app.globalData.utils.showToast('请先同意协议')
         }
         // required objects
         const orderData = toRaw(order);
         const serviceData = toRaw(service.value);
         const hospitalsData = toRaw(hospitals.value);
         const clientData = toRaw(client);
+
+        // fill service specific required fields
+        orderData.service_code = serviceData.code
+        orderData.service_id = serviceData.id
+        orderData.service_name = serviceData.name
+        orderData.service_stype = serviceData.stype
+
         if (serviceData.stype < 100) {
             if (hospital_index.value === 0) {
-                return showToast('请选择就诊医院')
+                return app.globalData.utils.showToast('请选择就诊医院')
             }
         }
         if (!orderData.starttime) {
-            return showToast('请选择就诊时间')
+            return app.globalData.utils.showToast('请选择就诊时间')
         }
         if (serviceData.stype == 10 || serviceData.stype == 15 || serviceData.stype == 20) {
             if (!clientData.id) {
-                return showToast('请选择就诊人')
+                return app.globalData.utils.showToast('请选择就诊人')
             }
             if (!orderData.receiveAddress) {
-                return showToast('请填写接送地址')
+                return app.globalData.utils.showToast('请填写接送地址')
             }
         } else if (serviceData.stype == 30 || serviceData.stype == 40) {
             // 收件地址
             if (!orderData.address.userName) {
-                return showToast('请选择收件信息')
+                return app.globalData.utils.showToast('请选择收件信息')
             }
         }
         if (!orderData.tel) {
-            return showToast('请填写联系电话')
+            return app.globalData.utils.showToast('请填写联系电话')
         }
 
 
@@ -603,15 +610,30 @@
         if (!uni.getStorageSync('token')) {
             popup.value.open('center')
         }
-        showToast('下单成功')
+        createOrder(orderData)
+        app.globalData.utils.showToast('下单成功')
     }
-    const showToast = (msg) => {
-        uni.showToast({
-            title: msg,
-            icon: 'none',
-            duration: 1000
+
+    const createOrder = (orderData) => {
+        console.log('createOrder')
+        app.globalData.utils.request({
+            url: '/pay/createOrder',
+            method: 'POST',
+            header: {
+                token: uni.getStorageSync('token'),
+            },
+            data: orderData,
+            success: (success) => {
+                console.log("createOrder success", success)
+            },
+            fail: (fail) => {
+                console.log("createOrder fail", fail)
+                app.globalData.utils.showToast(fail.data.msg)
+            },
         })
     }
+
+
 </script>
 
 <style>
