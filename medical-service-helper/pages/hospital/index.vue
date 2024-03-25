@@ -97,6 +97,35 @@
 </template>
 
 <script setup>
+    import { ref } from 'vue';
+    import { onLoad } from "@dcloudio/uni-app";
+    const app = getApp()
+    const navBarHeight = ref("")
+    const hospital = ref({})
+    const services = ref([])
+    const onNavBarAttached = (e) => {
+        navBarHeight.value = e.detail.navBarHeight
+    }
+    onLoad((params) => {
+        app.globalData.utils.request({
+            url: '/Hospital/index',
+            data: {
+                hid: params.hid
+            },
+            success: (res) => {
+                console.log("get hospital index", res)
+                hospital.value = res.data.hospital
+                services.value = res.data.services
+            }
+        })
+    });
+    const clone_shareModal = ref(false)
+    const showShareModal = () => {
+        console.log('showShareModal')
+        clone_shareModal.value = true
+    }
 </script>
 
-<style></style>
+<style>
+@import "./index.css";
+</style>
