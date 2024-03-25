@@ -349,20 +349,41 @@
                       @click="ok">确定</view>
             </view>
         </uni-popup>
+        <uni-popup ref="qrcodePopup"
+                   type="center"
+                   :is-mask-click="false"
+                   background-color="#fff">
+            <view class="pay-box">
+                <image src="../../static/resource/images/modal_closer.png"
+                       style="display: block;width: 30rpx; height: 30rpx;"
+                       @click="payment"
+                       mode="scaleToFill" />
+                <view class="text-center">微信支付</view>
+                <canvas id="qrcode"
+                        canvas-id="qrcode"
+                        style="width: 300rpx;height: 300rpx;"></canvas>
+                <view class="text-center">请使用本人微信扫描以上二维码</view>
+
+            </view>
+
+        </uni-popup>
     </view>
 </template>
 
 <script setup>
     import { ref, reactive, toRaw } from 'vue'
     import { onLoad } from '@dcloudio/uni-app'
+    import UQRCode from 'uqrcodejs';
     const app = getApp()
     onLoad((options) => {
         console.log('service onload', options)
         mainLoad(options)
     })
 
-    // 弹框控制
+    // 验证码弹框控制
     const popup = ref()
+    // 支付弹窗控制
+    const qrcodePopup = ref()
     // 页面服务详情
     const service = ref({})
     // 医院列表
@@ -628,11 +649,33 @@
             },
             fail: (fail) => {
                 console.log("createOrder fail", fail)
-                app.globalData.utils.showToast(fail.data.msg)
+            },
+            complete: (complete) => {
+                console.log("createOrder complete", complete)
+                qrcodePopup.value.open('center')
+                // 获取uQRCode实例
+                const qr = new UQRCode();
+                // 设置二维码内容
+                qr.data = "https://uqrcode.cn/doc";
+                // 设置二维码大小，必须与canvas设置的宽高一致
+                qr.size = 150;
+                // 调用制作二维码方法
+                qr.make();
+                // 获取canvas上下文
+                var canvasContext = uni.createCanvasContext('qrcode', this); // 如果是组件，this必须传入
+                // 设置uQRCode实例的canvas上下文
+                qr.canvasContext = canvasContext;
+                // 调用绘制方法将二维码图案绘制到canvas上
+                qr.drawCanvas();
             },
         })
     }
 
+    // 跳转到订单列表
+    const payment = () => {
+        console.log('payment')
+        uni.switchTab({ url: '../order/index' })
+    }
 
 </script>
 
