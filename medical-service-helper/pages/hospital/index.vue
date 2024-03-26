@@ -71,7 +71,6 @@
                                            :src="item.logo_image ? item.logo_image_url : '../../resource/images/avatar.jpg'"
                                            mode="aspectFill" />
                                 </view>
-
                                 <view class="weui-cell__bd">
                                     <view>
                                         <text class="serv-name">{{ item.name }}</text>
@@ -123,6 +122,22 @@
     const showShareModal = () => {
         console.log('showShareModal')
         clone_shareModal.value = true
+    }
+    const toMap = () => {
+        console.log('toMap')
+        uni.openLocation({
+            latitude: hospital.value.lat,
+            longitude: hospital.value.lng,
+            success: function () {
+                console.log('success');
+            }
+        })
+    }
+    const toService = (e) => {
+        console.log('toService', e)
+        uni.navigateTo({
+            url: `../service/index?svid=${e.currentTarget.dataset.svid}&hid=${hospital.value.id}`
+        })
     }
 </script>
 
