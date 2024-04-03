@@ -84,6 +84,7 @@
         app.globalData.utils.request({
             url: "/api/authenticate",
             method: "POST",
+            header: {"Content-Type": "application/json"},
             data: { username: data.account, password: data.password, rememberMe: false },
             success: (res) => {
                 console.log("success", res);

@@ -25,6 +25,7 @@
         app.globalData.utils.request({
             url: "/api/tickets",
             header: {
+                "Content-Type": "application/json",
                 Authorization: "Bearer " + uni.getStorageSync("AuthToken"),
             },
             success: (success) => {
