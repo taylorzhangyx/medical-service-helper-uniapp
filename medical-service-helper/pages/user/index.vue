@@ -1,116 +1,114 @@
 <template>
     <view>
-        <view class="op-cells"
-              style="background-color: #ffffff; padding: 0 0 60rpx 0; overflow: hidden; text-align: center">
-            <view style="margin-top: 40rpx">
-                <view
-                      style="display: inline-block; width: 150rpx; height: 150rpx; border-radius: 200rpx; overflow: hidden">
-                    <block v-if="mine.avatar">
-                        <image :src="mine.avatar_url"
-                               style="width: 150rpx; height: 150rpx" />
-                    </block>
-                    <block v-else>
-                        <image src="/static/resource/images/avatar.jpg"
-                               style="width: 150rpx; height: 150rpx" />
-                    </block>
+        <view>
+            <form @submit="formSubmit" @reset="formReset">
+                <!-- <view class="uni-form-item uni-column">
+                    <view class="title">switch</view>
+                    <view>
+                        <switch name="switch" />
+                    </view>
                 </view>
-            </view>
-            <view style="padding-top: 20rpx">
-                <text class="user-nickname">{{ mine.nickname ? mine.nickname : '用户' + mine._id }}</text>
-            </view>
+                <view class="uni-form-item uni-column">
+                    <view class="title">radio</view>
+                    <radio-group name="radio">
+                        <label>
+                            <radio value="radio1" /><text>选项一</text>
+                        </label>
+                        <label>
+                            <radio value="radio2" /><text>选项二</text>
+                        </label>
+                    </radio-group>
+                </view>
+                <view class="uni-form-item uni-column">
+                    <view class="title">checkbox</view>
+                    <checkbox-group name="checkbox">
+                        <label>
+                            <checkbox value="checkbox1" /><text>选项一</text>
+                        </label>
+                        <label>
+                            <checkbox value="checkbox2" /><text>选项二</text>
+                        </label>
+                    </checkbox-group>
+                </view>
+                <view class="uni-form-item uni-column">
+                    <view class="title">slider</view>
+                    <slider value="50" name="slider" show-value></slider>
+                </view> -->
+                <view>
+                    <text>is Authenticated: {{ isAuthenticated }}</text>
+                    <p />
+                    <text>Token:{{ token }}</text>
+                </view>
+                <view class="uni-form-item uni-column">
+                    <view class="title">登录信息</view>
+                    <view class="uni-form-item uni-column">
+                        <text>账号</text>
+                        <input class="uni-input" name="input" placeholder="请输入账号" v-model="loginInfo.account" />
+                    </view>
+                    <view class="uni-form-item uni-column">
+                        <view class="title">密码输入的input</view>
+                        <input
+                            class="uni-input"
+                            password
+                            type="text"
+                            placeholder="请输入密码"
+                            v-model="loginInfo.password"
+                        />
+                    </view>
+                </view>
+                <view class="uni-btn-v">
+                    <button form-type="submit">Submit</button>
+                    <button type="default" form-type="reset">Reset</button>
+                    <button hover-class="button-hover" @click="logout">Logout</button>
+                </view>
+            </form>
         </view>
-        <view class="weui-cells op-cells"
-              style="margin-top: 20rpx">
-            <view class="weui-cell">
-                <view class="weui-cell__bd">我的订单</view>
-                <view class="weui-cell__ft"><text @tap="toOrders"
-                          style="font-size: 26rpx">全部</text></view>
-            </view>
-            <view class="weui-cell"
-                  style="padding: 0">
-                <view class="weui-cell__bd">
-                    <view class="data-cell"
-                          hover-class="weui-cell_active"
-                          @tap="toOrders"
-                          data-filt="1">
-                        <view class="data-icon">
-                            <image src="/static/resource/images/od_10.png"
-                                   mode="widthFix" />
-                        </view>
-                        <view class="data-txt">待支付</view>
-                        <text v-if="statistic.topays > 0"
-                              class="data-cell-hint data-cell-hint-red">{{ statistic.topays }}</text>
-                    </view>
-                </view>
-                <view class="weui-cell__bd">
-                    <view class="data-cell"
-                          hover-class="weui-cell_active"
-                          @tap="toOrders"
-                          data-filt="2">
-                        <view class="data-icon">
-                            <image src="/static/resource/images/od_20.png"
-                                   mode="widthFix" />
-                        </view>
-                        <view class="data-txt">待服务</view>
-                        <text v-if="statistic.todos > 0"
-                              class="data-cell-hint data-cell-hint-red">{{ statistic.todos }}</text>
-                    </view>
-                </view>
-                <view class="weui-cell__bd">
-                    <view class="data-cell"
-                          hover-class="weui-cell_active"
-                          @tap="toOrders"
-                          data-filt="3">
-                        <view class="data-icon">
-                            <image src="/static/resource/images/od_30.png"
-                                   mode="widthFix" />
-                        </view>
-                        <view class="data-txt">已完成</view>
-                    </view>
-                </view>
-                <view class="weui-cell__bd">
-                    <view class="data-cell"
-                          hover-class="weui-cell_active"
-                          @tap="toOrders"
-                          data-filt="4">
-                        <view class="data-icon">
-                            <image src="/static/resource/images/od_40.png"
-                                   mode="widthFix" />
-                        </view>
-                        <view class="data-txt">已取消</view>
-                    </view>
-                </view>
-            </view>
-        </view>
-        <view class="weui-cells op-cells"
-              style="margin-top: 20rpx">
-            <view class="weui-cell weui-cell_access"
-                  hover-class="weui-cell_active">
-                <view class="weui-cell__hd">
-                    <image src="/static/resource/images/ic_clients.png"
-                           style="display: block; margin-right: 20rpx; width: 20px; height: 20px"></image>
-                </view>
-                <view class="weui-cell__bd">服务对象管理</view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-            </view>
-            <view class="weui-cell weui-cell_access"
-                  hover-class="weui-cell_active"
-                  @tap="showShareModal">
-                <view class="weui-cell__hd">
-                    <image src="/static/resource/images/ic_share.png"
-                           style="display: block; margin-right: 20rpx; width: 20px; height: 20px"></image>
-                </view>
-                <view class="weui-cell__bd">分享转发</view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-            </view>
-        </view>
-        <share :shareModal="clone_shareModal"></share>
     </view>
 </template>
 
 <script setup>
+    import { ref, reactive, toRaw, computed } from "vue";
+    const app = getApp();
+    const isAuthenticated = computed(() => {
+        return loginInfo.isAuthed;
+    });
+    const token = ref("");
+    const loginInfo = reactive({
+        account: "",
+        password: "",
+        isAuthed: false,
+    });
+    const formSubmit = (e) => {
+        console.log("formSubmit", loginInfo);
+        const data = toRaw(loginInfo);
+        app.globalData.utils.request({
+            url: "/api/authenticate",
+            method: "POST",
+            data: { username: data.account, password: data.password, rememberMe: false },
+            success: (res) => {
+                console.log("success", res);
+                token.value = res.id_token;
+                uni.setStorageSync("AuthToken", token.value);
+                loginInfo.isAuthed = true;
+                uni.switchTab({ url: "/pages/index/index" });
+            },
+        });
+    };
+
+    const formReset = (e) => {
+        console.log("formReset", e);
+        loginInfo.account = "";
+        loginInfo.password = "";
+    };
+    const logout = (e) => {
+        uni.removeStorageSync("AuthToken");
+        loginInfo.isAuthed = false;
+        uni.switchTab({ url: "../index/index" });
+        token.value = "";
+    };
 </script>
-
 <style>
-
+    .uni-form-item .title {
+        padding: 20rpx 0;
+    }
 </style>
